@@ -8,6 +8,8 @@ monitor:
    - HOSTINT=linkcontainername
 */
 
+var portsarr = process.env.PORTS.split(";");
+var outputconsole;
 var portsstatusarr = []; //array
 var errorarr = [];
 var psStatus = 0;
@@ -15,8 +17,8 @@ var services;
 var hosts;
 
 function sendstat(info){
-	var monitoring = process.env.MONITORING_SERVER
-	var userpwd = process.env.PWD
+	var monitoring = process.env.MONITORING_SERVER;
+	var userpwd = process.env.PWD;
 	
 	console.log(info);
 	
@@ -32,19 +34,49 @@ function sendstat(info){
 	console.error('stderr: ' + data);
 	});	
 }
-//'echo '+ info + '| /usr/sbin/send_nsca -H ' + monitoring + ' -c '+ userpwd+'/nsca.conf -d ";"'
+
 function writestat(){
 	var hostname = process.env.HOSTNAMEMONITORING;
-	var docker = process.env.DOCKERHOST;
-	
+	var outputstring
 	if (errorarr.length > 0){
-		//"Hostname;Servicename;2;ERROR - Service(s) "
-		services = hostname +";"+ "Monitored_Services;2;ERROR - Service(s) " + errorarr.toString() + " not responding";
+		services = hostname +";"+ "Monitored_Services;2;" //ERROR - Service(s) " + errorarr.toString() + " not responding";
+		for (var i=0; i < portsarr.length;i++){
+			var splitports2 = portsarr[i].split(":");
+			if( i == '0' ){
+				if(errorarr.indexOf(splitports2[0] + "(" + splitports2[1] + ")") == '-1' ) {
+					outputstring = "\nOK - Service: " + splitports2[0] + "(" + splitports2[1] + ")";
+				}
+				else {
+					outputstring = "\nERROR - Service " + splitports2[0] + "(" + splitports2[1] + ") not responding";
+				}
+			}
+			else{
+				if(errorarr.indexOf(splitports2[0] + "(" + splitports2[1] + ")") == '-1' ) {
+					outputstring = outputstring + "\nOK - Service: " + splitports2[0] + "(" + splitports2[1] + ")";
+				}
+				else {
+					outputstring = outputstring + "\nERROR - Service " + splitports2[0] + "(" + splitports2[1] + ") not responding";
+				}
+			}
+		}
 	}
 	else{
-		services = hostname +";"+ "Monitored_Services;0;OK - All Service ok";
-	}
-	sendstat(services);
+		services = hostname +";"+ "Monitored_Services;0;"
+		for (var i=0; i < portsarr.length;i++){
+			var splitports = portsarr[i].split(":");
+			if(i>0){
+				outputconsole = outputconsole + "\nOK - Service: " + splitports[0] + "(" + splitports[1] + ")";
+			}
+			else{
+				outputconsole = "\nOK - Service: " + splitports[0] + "(" + splitports[1] + ")";
+			}
+		}
+	}	
+	
+	sendstat(services + outputconsole);
+	//Debug
+	//console.log(services + outputconsole);
+	
 	
 	if(portsstatusarr.length === errorarr.length){
 		hosts = hostname + ";2;ERROR - Host not reachable";
@@ -52,7 +84,9 @@ function writestat(){
 	else{
 		hosts = hostname + ";0;OK - Everything is going to be fine";
 	}
-	sendstat(hosts);
+	//sendstat(hosts);
+	
+	console.log(hosts);
 }
 
 function status(){
@@ -84,7 +118,6 @@ function portscann(desc, pnumber, host, stat) {
 }
 
 function start(){
-	var portsarr = process.env.PORTS.split(";");
 	for (var i = 0; i < portsarr.length; i++){
 		var servicearr = portsarr[i].split(":");
 		portscann(servicearr[0], servicearr[1], process.env.HOSTINT, portsarr.length);
