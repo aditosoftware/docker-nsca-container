@@ -43,4 +43,4 @@ webserverrn2 - name of server
     -e MONITORING_SERVER="monitoring" -e NSCAPASS="SDFasdfasdf3adf" \
     -e HOSTINT="httpd" --name monitoring -t adito/nsca-monitoring
   
-!!You need link a container TO monitoring 
+!!You need link a container TO monitoring
