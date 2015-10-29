@@ -42,7 +42,7 @@ function writestat(){
 		services = hostname +";"+ "Monitored_Services;2;ERROR - Service(s) " + errorarr.toString() + " not responding";
 	}
 	else{
-		services = hostname +";"+ "Monitored Services;0;OK - All Service ok";
+		services = hostname +";"+ "Monitored_Services;0;OK - All Service ok";
 	}
 	sendstat(services);
 	
