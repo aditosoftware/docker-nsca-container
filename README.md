@@ -11,10 +11,6 @@ With this image can you monitor a linked container(Ports only).
       
       - PORTS=SSH:22;tomcat:8081;HTTP:80
       
-  Displayname for a server    
-      
-      - DISPLAYNAME=WebServer Nr2
-      
   DNS Name of monitoring server
       
       - MONITORING_SERVER=monitoring

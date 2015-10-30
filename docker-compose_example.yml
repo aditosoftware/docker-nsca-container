@@ -17,7 +17,6 @@ monitor:
   environment:
     - HOSTNAMEMONITORING=webservernr2
     - PORTS=SSH:22;tomcat:8081;HTTP:80
-    - DISPLAYNAME=WebServer Nr2
     - MONITORING_SERVER=monitoring
     - NSCAPASS=SDFasdfasdf3adf
     - HOSTINT=httpd

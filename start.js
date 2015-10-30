@@ -2,7 +2,6 @@
 monitor:
    - HOSTNAMEMONITORING=webservernr2
    - PORTS=SSH:22;TEST:7775;PROD:7777;jnlp:80;tomcat:8081;
-   - DISPLAYNAME="Server Name"
    - MONITORING_SERVER=monitoring
    - NSCAPASS=SDFasdfasdf3adf
    - HOSTINT=linkcontainername
