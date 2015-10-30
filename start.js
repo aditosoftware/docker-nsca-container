@@ -72,8 +72,8 @@ function writestat(){
 			}
 		}
 	}	
-	
-	sendstat(services + outputconsole);
+	//Normal
+		sendstat(services + outputconsole);
 	//Debug
 	//console.log(services + outputconsole);
 	
@@ -84,9 +84,10 @@ function writestat(){
 	else{
 		hosts = hostname + ";0;OK - Everything is going to be fine";
 	}
-	//sendstat(hosts);
-	
-	console.log(hosts);
+	//Normal
+		sendstat(hosts);
+	//Debug
+	//console.log(hosts);
 }
 
 function status(){
